@@ -1,4 +1,5 @@
 const Order = require('../models/order.model');
+const db = require('../firebaseAdmin');
 
 const saveOrder = async (req, res) => {
   const { name, whatsapp, tableNo, items } = req.body;
@@ -15,6 +16,19 @@ const saveOrder = async (req, res) => {
 
     const savedOrder = await newOrder.save();
     console.log('Order saved to database:', savedOrder);
+
+    // Add order to Firestore
+    const firestoreOrder = {
+      name: savedOrder.name,
+      whatsapp: savedOrder.whatsapp,
+      tableNo: savedOrder.tableNo,
+      items: savedOrder.items,
+      createdAt: savedOrder.createdAt
+    };
+
+    await db.collection('orders').add(firestoreOrder);
+    console.log('Order added to Firestore');
+
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error('Error saving order:', error);
