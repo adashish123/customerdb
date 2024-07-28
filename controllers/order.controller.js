@@ -30,6 +30,8 @@ const saveOrder = async (req, res) => {
     // Remove the _id field since Firestore will create its own ID
     delete plainOrder._id;
 
+    console.log('Adding order to Firestore:', plainOrder);
+
     // Add order to Firestore
     await db.collection('orders').add(plainOrder);
     console.log('Order added to Firestore');

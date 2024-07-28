@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 require('dotenv').config();
+const { Firestore } = require('@google-cloud/firestore');
 const grpc = require('@grpc/grpc-js');
 
 // Initialize Firebase Admin SDK
@@ -15,15 +16,17 @@ admin.initializeApp({
     token_uri: process.env.FIREBASE_TOKEN_URI,
     auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_CERT_URL,
     client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
-  }),
-  databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
+  })
 });
 
-const db = admin.firestore();
-db.settings({
-  grpc: {
-    sslCreds: grpc.credentials.createSsl()
-  }
+// Create a new Firestore client with the proper settings
+const firestore = new Firestore({
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  credentials: {
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  },
+  grpc
 });
 
-module.exports = db;
+module.exports = firestore;
