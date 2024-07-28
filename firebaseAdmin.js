@@ -1,6 +1,9 @@
 const admin = require('firebase-admin');
 require('dotenv').config();
 
+// Ensure `@grpc/grpc-js` is used
+const grpc = require('@grpc/grpc-js');
+
 process.env.GRPC_VERBOSITY = 'DEBUG';
 process.env.GRPC_TRACE = 'all';
 
