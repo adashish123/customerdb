@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const orderRoute = require('./routes/order.router');
-const db = require('./firebaseAdmin'); // Ensure Firestore is initialized
+const db = require('./firebaseAdmin'); 
 
 const app = express();
 const port = process.env.PORT || 5000;
