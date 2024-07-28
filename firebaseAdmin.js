@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 require('dotenv').config();
-const { Firestore } = require('@google-cloud/firestore');
 const grpc = require('@grpc/grpc-js');
 
 // Initialize Firebase Admin SDK
@@ -19,14 +18,10 @@ admin.initializeApp({
   })
 });
 
-// Create a new Firestore client with the proper settings
-const firestore = new Firestore({
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  credentials: {
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-  },
+// Use the Firestore settings to force using @grpc/grpc-js
+const db = admin.firestore();
+db.settings({
   sslCreds: grpc.credentials.createSsl()
 });
 
-module.exports = firestore;
+module.exports = db;
