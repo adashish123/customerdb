@@ -17,16 +17,14 @@ const saveOrder = async (req, res) => {
     const savedOrder = await newOrder.save();
     console.log('Order saved to database:', savedOrder);
 
-    // Add order to Firestore
-    const firestoreOrder = {
-      name: savedOrder.name,
-      whatsapp: savedOrder.whatsapp,
-      tableNo: savedOrder.tableNo,
-      items: savedOrder.items,
-      createdAt: savedOrder.createdAt
-    };
+    // Convert the MongoDB document to a plain JavaScript object
+    const plainOrder = savedOrder.toObject();
+    
+    // Remove the _id field since Firestore will create its own ID
+    delete plainOrder._id;
 
-    await db.collection('orders').add(firestoreOrder);
+    // Add order to Firestore
+    await db.collection('orders').add(plainOrder);
     console.log('Order added to Firestore');
 
     res.status(201).json(savedOrder);
