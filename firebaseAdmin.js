@@ -2,7 +2,6 @@ const admin = require('firebase-admin');
 require('dotenv').config();
 const grpc = require('@grpc/grpc-js');
 
-// Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert({
     type: process.env.FIREBASE_TYPE,
@@ -18,7 +17,6 @@ admin.initializeApp({
   })
 });
 
-// Use the Firestore settings to force using @grpc/grpc-js
 const db = admin.firestore();
 db.settings({
   sslCreds: grpc.credentials.createSsl()

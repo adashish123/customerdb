@@ -1,18 +1,15 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const orderRoute = require('./routes/order.router');
-const db = require('./firebaseAdmin'); // Ensure Firestore is initialized
+const db = require('./firebaseAdmin');
 
 const app = express();
 const port = process.env.PORT || 5000;
-const whitelist = ['https://digitalmenu-rouge.vercel.app']; // Add your frontend domain here
+const whitelist = ['https://digitalmenu-rouge.vercel.app'];
 
-// Setup CORS explicitly
 app.use(cors({
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -32,7 +29,6 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-// Log incoming requests
 app.use((req, res, next) => {
   console.log(`Received ${req.method} request for ${req.url}`);
   next();
@@ -52,7 +48,6 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-// Log errors
 app.use((err, req, res, next) => {
   console.error('Server error:', err);
   res.status(500).send('Server error occurred');

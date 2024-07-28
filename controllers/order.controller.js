@@ -17,22 +17,16 @@ const saveOrder = async (req, res) => {
     const savedOrder = await newOrder.save();
     console.log('Order saved to database:', savedOrder);
 
-    // Convert the MongoDB document to a plain JavaScript object
     const plainOrder = savedOrder.toObject();
-
-    // Deeply convert all items to plain JavaScript objects
     plainOrder.items = plainOrder.items.map(item => {
       const plainItem = item.toObject ? item.toObject() : item;
       delete plainItem._id;
       return plainItem;
     });
-
-    // Remove the _id field since Firestore will create its own ID
     delete plainOrder._id;
 
     console.log('Adding order to Firestore:', plainOrder);
 
-    // Add order to Firestore
     await db.collection('orders').add(plainOrder);
     console.log('Order added to Firestore');
 
