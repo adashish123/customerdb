@@ -1,4 +1,8 @@
 const admin = require('firebase-admin');
+require('dotenv').config();
+
+process.env.GRPC_VERBOSITY = 'DEBUG';
+process.env.GRPC_TRACE = 'all';
 
 admin.initializeApp({
   credential: admin.credential.cert({
